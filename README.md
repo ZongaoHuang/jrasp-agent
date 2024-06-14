@@ -1,7 +1,7 @@
 # jrasp-agent
 
 ![Build Status](https://img.shields.io/badge/Build-passing-brightgreen)
-![Version](https://img.shields.io/badge/Version-1.1.4-informational)
+![Version](https://img.shields.io/badge/Version-1.1.5-informational)
 ![Go Guild Version](https://img.shields.io/badge/Go-v1.19.6+-blue)
 ![Maven Version](https://img.shields.io/badge/Maven-v3.8.0-blue)
 ![Java Build Version](https://img.shields.io/badge/Java-v1.6+-blue)
@@ -68,6 +68,8 @@ under development:
 
 + jdk6+
 
+jdk11+ `--add-opens=java.base/java.lang=ALL-UNNAMED`
+
 ## 03 Install (centos)
 
 [how to install](https://www.jrasp.com/guide/install/v1.1.2/jrasp-agent.html)
@@ -89,7 +91,7 @@ It should be noted that macOs/windows is only for development and testing.
 
 ## 06 Wechart
 
-wx：XL1870011370
+wx：hycsxs
 
 ## 07 Official website
 
@@ -106,4 +108,4 @@ If you are using it, please contact us and add it here.
 
 ## 10 Copyright Information
 
-GPL3.0（You can learn and use in your own projects, but commercialization must be authorized)
+GPL3.0（You can learn and use in your own projects, other actions must be authorized)

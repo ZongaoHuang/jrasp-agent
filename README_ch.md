@@ -1,7 +1,7 @@
 # jrasp-agent
 
 ![Build Status](https://img.shields.io/badge/Build-passing-brightgreen)
-![Version](https://img.shields.io/badge/Version-1.1.4-informational)
+![Version](https://img.shields.io/badge/Version-1.1.5-informational)
 ![Go Guild Version](https://img.shields.io/badge/Go-v1.19.6+-blue)
 ![Maven Version](https://img.shields.io/badge/Maven-v3.8.0-blue)
 ![Java Build Version](https://img.shields.io/badge/Java-v1.6+-blue)
@@ -65,7 +65,7 @@ jrasp-agent 的安全模块
 
 ### 支持的jdk版本
 + jdk6+
-（jdk17以上需要修改jvm参数）
+jdk11+增加jvm参数 --add-opens=java.base/java.lang=ALL-UNNAMED
 
 ## 03 快速使用
 
@@ -95,7 +95,7 @@ bash packages_darwin.sh
 
 ## 06 技术交流群
 
-加微信：XL1870011370
+加微信：hycsxs
 
 ## 07 官网
 
@@ -115,4 +115,4 @@ bash packages_darwin.sh
 
 ## 10 版权信息
 
-GPL3.0 （您可以在自身的项目中学习与使用，商业化必须获得授权）
+GPL3.0 （您可以在自身的项目中学习与使用，其它行为必须获得授权）
