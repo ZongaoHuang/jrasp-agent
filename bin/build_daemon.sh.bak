@@ -1,0 +1,20 @@
+#!/bin/bash
+
+# jrasp's target dir
+JRASP_TARGET_DIR=../target/jrasp
+
+# jrasp-daemon
+cd ../jrasp-daemon/build && ./build.sh || exit_on_err 1 "[JRASP ERROR] go build jrasp-daemon failed." ;
+cd - || exit_on_err 1 "[JRASP ERROR] cd jrasp-daemon dir failed.";
+
+cd ../jrasp-attach/build && ./build.sh || exit_on_err 1 "[JRASP ERROR] go build jrasp-attach failed." ;
+cd - || exit_on_err 1 "cd jrasp-attach dir failed.";
+
+cp ../jrasp-daemon/config/config.json ${JRASP_TARGET_DIR}/config/
+# for jrasp-daemon
+cp ../jrasp-daemon/bin/jrasp-daemon ${JRASP_TARGET_DIR}/bin/jrasp-daemon
+
+# for sh
+cp ../jrasp-daemon/bin/*.sh ${JRASP_TARGET_DIR}/bin/
+
+cp ../jrasp-attach/bin/attach ${JRASP_TARGET_DIR}/bin/attach

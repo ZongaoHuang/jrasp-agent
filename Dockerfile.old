@@ -1,0 +1,82 @@
+FROM maven:3.6.3-openjdk-8 AS builder
+ #  AS builder 起别名
+
+RUN mkdir /build
+# 创建临时文件
+
+ADD ./bin /build/bin
+ADD ./jrasp-api /build/jrasp-api
+ADD ./jrasp-bridge /build/jrasp-bridge
+ADD ./jrasp-core /build/jrasp-core
+ADD ./jrasp-encrypt /build/jrasp-encrypt
+ADD ./jrasp-maven /build/jrasp-maven
+ADD ./jrasp-launcher /build/jrasp-launcher
+ADD ./jrasp-module /build/jrasp-module
+ADD ./pom.xml /build/pom.xml
+ADD ./tools /build/tools
+
+#将 src目录复制到临时目录
+
+
+RUN cd /build/bin/ && sh ./packages_linux.sh
+
+
+FROM golang:1.18 AS builder2
+
+RUN mkdir /build
+
+ADD ./jrasp-daemon /build/jrasp-daemon
+ADD ./jrasp-attach /build/jrasp-attach
+ADD ./bin /build/bin
+
+COPY --from=builder /build/target /build/target
+
+RUN cd /build/bin/ && sh ./build_daemon.sh
+
+# 使用带有OpenJDK 8的基础镜像
+FROM openjdk:8-jdk
+
+# 设置工作目录为
+WORKDIR /app
+
+COPY --from=builder2 /build/target /app/target
+
+# 安装工具
+RUN apt-get update && apt-get install -y wget tar unzip netcat
+
+# 下载并解压Tomcat
+RUN wget https://archive.apache.org/dist/tomcat/tomcat-9/v9.0.85/bin/apache-tomcat-9.0.85.tar.gz \
+    && tar -xvf apache-tomcat-9.0.85.tar.gz \
+    && mv apache-tomcat-9.0.85 /app/tomcat \
+    && rm apache-tomcat-9.0.85.tar.gz
+
+# 设置Tomcat环境变量
+ENV CATALINA_HOME=/app/tomcat
+ENV PATH=$CATALINA_HOME/bin:$PATH
+
+# 清理Tomcat的默认应用
+RUN rm -rf $CATALINA_HOME/webapps/*
+
+# 解决tools.jar加载问题
+#ENV CATALINA_OPTS="-Xbootclasspath/a:$JAVA_HOME/lib/tools.jar"
+ENV CATALINA_OPTS="-Dcom.sun.management.jmxremote \
+                   -Dcom.sun.management.jmxremote.port=12345 \
+                   -Dcom.sun.management.jmxremote.rmi.port=12345 \
+                   -Dcom.sun.management.jmxremote.authenticate=false \
+                   -Dcom.sun.management.jmxremote.ssl=false \
+                   -Xbootclasspath/a:$JAVA_HOME/lib/tools.jar"
+
+# 暴露Tomcat端口
+EXPOSE 8080
+
+# 暴露JMX端口
+EXPOSE 12345
+
+# 复制启动脚本
+COPY bin/startup.sh /app/startup.sh
+
+# 设置脚本执行权限
+RUN chmod +x /app/startup.sh
+
+# 启动服务
+CMD ["/app/startup.sh"]
